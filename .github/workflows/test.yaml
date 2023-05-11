@@ -34,8 +34,9 @@ jobs:
           echo "quitting"
           docker stop test
       - name: Run Docker container
-        IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
-        run: docker run -d -p 8888:8888 --name stable $IMAGE 
+        run: |
+          IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
+          docker run -d -p 8888:8888 --name stable $IMAGE 
       - name: Wait for container to start
         run: |
           until docker exec stable jupyter lab --version; do sleep 1; done
