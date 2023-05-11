@@ -1,0 +1,47 @@
+name: new test
+on:
+  push:
+    branches: 
+      - 'image*'
+    #base-ope-image #might need to change to be test-book
+    #env: IMAGE:quay.io/rh_ee_keli/ope:image-template-NERC-test
+jobs:
+  new-test:
+    runs-on: ubuntu-latest #use the latest ubuntu container image 
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4 #use action to install python
+        with:
+          python-version: "3.9"
+      - name: Install dependencies #requirements docs unable to read, hard installing dependencies 
+        run: |
+          pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab
+          cp .github/workflows/import_test.py ./test_sc.py    
+      - name: pull and check health 
+        run: |
+          #IMAGE=quay.io/rh_ee_keli/ucsls:stable-base-ope-latest
+          IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
+          #IMAGE=quay.io/rh_ee_keli/ope:image-template-NERC-test
+          docker pull $IMAGE
+          docker image ls
+          echo "running"
+          docker run -d --name test $IMAGE # use a different port number here
+          echo "done running"
+          sleep 10
+          echo "ps -a" 
+          docker ps -a  
+          echo "quitting"
+          docker stop test
+      - name: Run Docker container
+        IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
+        run: docker run -d -p 8888:8888 --name stable $IMAGE 
+      - name: Wait for container to start
+        run: |
+          until docker exec stable jupyter lab --version; do sleep 1; done
+      - name: Execute Notebook
+        run: |
+          docker exec stable jupyter nbconvert --to=python mynotebook.ipynb
+          docker exec stable python .github/workflows/import_test.py
+      - name: Stop Docker container
+        run: docker stop stable
