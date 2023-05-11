@@ -84,8 +84,12 @@ jobs:
           container_id=$(docker ps -q | head -n 1)
           echo $container_id
           token=$(docker exec $container_id jupyter lab list 2>&1 | grep -o "token=[^ ]*" | cut -d= -f2)
+          echo "token: $token"
           chmod +x ./test_sc.py 
           TEST=$( ./test_sc.py)
-          #chmod +x ./test_sc.py 
+          echo $TEST
+
+          cp .github/workflows/import_test.py ./test.py
+          cat ./test.py
 
           python3 $TEST $token
