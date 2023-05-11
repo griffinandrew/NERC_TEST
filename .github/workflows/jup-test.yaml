@@ -19,7 +19,7 @@ jobs:
           pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab
           cp .github/workflows/import_test.py ./test_sc.py    
 
-      - name: check health
+      - name: pull and check health 
         run: |
           #IMAGE=quay.io/rh_ee_keli/ucsls:stable-base-ope-latest
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
@@ -39,7 +39,7 @@ jobs:
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
           echo "running"
-          docker run --name stable -p 8888:8888 $IMAGE #--ip 0.0.0.0 --no-browser
+          docker run --name stable -p 8888:8888 $IMAGE    #--ip 0.0.0.0 --no-browser
           echo "done running"
           echo "sleep"
           sleep 5
@@ -48,7 +48,7 @@ jobs:
           chmod +x ./test_sc.py 
           TEST=$( ./test_sc.py)
           echo "starting nb"
-          docker exec stable jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --NotebookApp.token='' --port 8888
+          docker exec stable jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --NotebookApp.token='' --port 8888 &
           sleep 5
           echo "done sleep, listing"
           docker ps -a
