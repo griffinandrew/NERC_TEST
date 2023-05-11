@@ -1,10 +1,7 @@
-name: jupyter nb test
+name: jupyter test minimal
 on:
   push:
     branches: 
-      - 'image*'
-    #base-ope-image #might need to change to be test-book
-    #env: IMAGE:quay.io/rh_ee_keli/ope:image-template-NERC-test
 jobs:
   jup-nb:
     runs-on: ubuntu-latest #use the latest ubuntu container image 
@@ -26,39 +23,13 @@ jobs:
           #IMAGE=quay.io/rh_ee_keli/ope:image-template-NERC-test
           docker pull $IMAGE
           docker image ls
-          echo "running"
           docker run -d --name test $IMAGE # use a different port number here
           echo "done running"
-          sleep 10
-          echo "ps -a" 
+          sleep 5
           docker ps -a  
-          echo "quitting"
           docker stop test
 
-      - name: run
-        run: |
-          IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
-          echo "running"
-          docker run -d --name stable -p 8888:8888 $IMAGE #--ip 0.0.0.0 --no-browser
-          echo "done running"
-          echo "sleep"
-          sleep 10
-          echo "ps -a" 
-          docker ps -a  
-          chmod +x ./test_sc.py 
-          TEST=$( ./test_sc.py)
-          echo "starting nb"
-          docker exec -d stable jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --NotebookApp.token='' --port 8888
-          sleep 10
-          echo "done sleep, listing"
-          docker ps -a
-          docker exec -d stable jupyter nbconvert --execute --output /dev/null test_sc.py --execute "--ExecutePreprocessor.timeout=-1"
-          echo "sleeping"
-          sleep 30
-          docker ps -a
-          docker stop stable 
-
-      - name: beta
+      - name: verify sucess
         run: | 
           make pull-beta
           make run-beta &
@@ -66,13 +37,4 @@ jobs:
           container_id=$(docker ps -q | head -n 1)
           echo $container_id
           token=$(docker exec $container_id jupyter lab list 2>&1 | grep -o "token=[^ ]*" | cut -d= -f2)
-          echo "token: $token"
-          chmod +x ./test_sc.py 
-          TEST=$( ./test_sc.py)
-          echo $TEST
-
-          cp .github/workflows/import_test.py ./test.py
-          cat ./test.py
           python3 .github/workflows/import_test.py $token
-
-          #python3 $TEST $token
