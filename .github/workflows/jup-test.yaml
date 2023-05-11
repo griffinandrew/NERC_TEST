@@ -69,17 +69,6 @@ jobs:
 
           echo "ps -a" 
           docker ps -a  
-          echo "chmod"
-          chmod +x ./test_sc.py
-          echo "1 done"
-          chmod +x ./test.ipynb
-          echo "2 done"
-          chmod +x ./stop.sh
-          echo "3 done"
-          chmod +x ./import.ipynb
-          echo "4 done"
-          chmod +x ./ip_jnb.ipynb
-          echo "5 done"
           TEST=$( ./test_sc.py)
           #echo "test 1 set" 
 
