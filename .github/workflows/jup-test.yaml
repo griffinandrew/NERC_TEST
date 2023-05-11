@@ -1,7 +1,9 @@
 name: jupyter nb test
 on:
   push:
-    branches: base-ope-image #might need to change to be test-book
+    branches: 
+      - 'image*'
+    #base-ope-image #might need to change to be test-book
     #env: IMAGE:quay.io/rh_ee_keli/ope:image-template-NERC-test
 jobs:
   jup-nb:
