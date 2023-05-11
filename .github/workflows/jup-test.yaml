@@ -39,7 +39,7 @@ jobs:
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
           echo "running"
-          docker run -d --name stable -p 8888:8888 $IMAGE #--ip 0.0.0.0 --no-browser
+          docker run --name stable -p 8888:8888 $IMAGE #--ip 0.0.0.0 --no-browser
           echo "done running"
           echo "sleep"
           sleep 10
@@ -48,7 +48,7 @@ jobs:
           chmod +x ./test_sc.py 
           TEST=$( ./test_sc.py)
           echo "starting nb"
-          docker exec -d stable jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --NotebookApp.token='' --port 8888
+          docker exec stable jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --NotebookApp.token='' --port 8888
           sleep 10
           echo "done sleep, listing"
           docker ps -a
