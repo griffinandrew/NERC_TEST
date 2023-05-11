@@ -66,11 +66,15 @@ except ImportError:
     raise ImportError("import array failed")
 
 
-def main():
+if len(sys.argv) <= 1:
+    print("Invalid number of arguments")
+    exit(1)
+
+#def main():
 
     for item in dir():
         print(item)
     sys.exit(0)
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
