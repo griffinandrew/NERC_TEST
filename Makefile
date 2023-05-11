@@ -84,7 +84,7 @@ pull: ## pull most recent public version
 	docker pull $(OPE_REGISTRY)$(OPE_IMAGE)$(OPE_TAG)
 
 pull-beta: ## pull most recent beta version
-	docker pull $(OPE_REGISTRY)$(OPE_IMAGE)$(OPE_BETA_TAG)
+	docker pull quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
 
 push-beta: ## push beta build
 # make dated version
@@ -150,14 +150,13 @@ run-beta: ARGS ?=
 run-beta: DARGS ?= -u $(OPE_UID):$(OPE_GID) -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 run-beta: PORT ?= 8888
 run-beta: ## start published version with jupyter lab interface
-	TAG=quay.io/rh_ee_keli/ope
-	docker run --rm -p $(PORT):$(PORT) $(DARGS) $(TAG)$(OPE_BETA_TAG) $(ARGS)
+	docker run --rm -p $(PORT):$(PORT) $(DARGS) quay.io/rh_ee_keli/ope:beta-image-template-NERC-test $(ARGS)
 
 show-run-beta: ARGS ?=
 show-run-beta: DARGS ?= -u $(OPE_UID):$(OPE_GID) -v "${HOST_DIR}":"${MOUNT_DIR}" -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} -p ${SSH_PORT}:22
 show-run-beta: PORT ?= 8888
 show-run-beta: ## start published version with jupyter lab interface
-	@-echo "docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(OPE_REGISTRY)$(OPE_IMAGE)$(OPE_TAG) $(ARGS)""
+	@-echo "docker run -it --rm -p $(PORT):$(PORT) $(DARGS) quay.io/rh_ee_keli/ope:beta-image-template-NERC-test $(ARGS)""
 
 show-tag: ## show current tag
 	@-echo $(OPE_REGISTRY)$(OPE_IMAGE)$(OPE_BETA_TAG)
