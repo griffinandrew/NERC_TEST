@@ -41,9 +41,6 @@ jobs:
 
       - name: run
         run: |
-
-
-      
           #IMAGE=quay.io/rh_ee_keli/ope:image-template-NERC-test
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
           echo "running"
@@ -56,39 +53,8 @@ jobs:
           sleep 10
           #LINK=file:///home/jovyan/.local/share/jupyter/runtime/jpserver-7-open.html
           
-          #echo "with loop" 
-          
-          #cat ./test.py
-
-          #echo "cp"
-
-          #cat ./test_sc.py
-          #cat ./stop.ipynb
-          #cat ./test.ipynb
-          #cat ./stop.ipynb
-
           echo "ps -a" 
           docker ps -a  
-          TEST=$( ./test_sc.py)
-          #echo "test 1 set" 
-
-          #TEST2=$( ./test.ipynb)
-          #TEST3=$( ./stop.sh)
-          #TEST4=$( ./import.ipynb)
-          echo "test 5 "
-          #TEST5=$( ./ip_jnb.ipynb)
-          
-          IPYNB=$(p2j test_sc.py)
-          FILE=$IPYNB
-          echo "$FILE is converted"
-          echo "test 5 done"
-
-          echo "ps -a"
-          docker ps -a
-          echo "should be listed"
-          ##docker exec stable pwd
-          #docker exec stable ls
-          #docker exec stable python $TEST
 
           TEST=$( ./test_sc.py)
           chmod +x ./test_sc.py 
@@ -101,26 +67,12 @@ jobs:
           echo "done sleep, listing"
           docker ps -a
 
-
-          echo "see if .ipynb is there "
-          ls
-          echo "chmod ipynb"
-          chmod +x test_sc.ipynb
-          echo "exec and run"
-          
-
-          docker exec -d stable jupyter nbconvert --execute --output /dev/null test_sc.ipynb --execute "--ExecutePreprocessor.timeout=-1"
+          docker exec -d stable jupyter nbconvert --execute --output /dev/null test_sc.py --execute "--ExecutePreprocessor.timeout=-1"
           echo "sleeping"
           sleep 30
           docker ps -a 
 
-          #container_id=$(docker ps -q | head -n 1)
-          #echo $container_id
-          #token=$(docker exec $container_id jupyter lab list 2>&1 | grep -o "token=[^ ]*" | cut -d= -f2)
-          #python3 $TEST $token
           docker stop stable 
-          #docker logs stable
-          #docker inspect stable
 
 
       - name: beta
