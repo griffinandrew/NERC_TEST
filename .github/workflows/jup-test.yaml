@@ -55,9 +55,10 @@ jobs:
           
           echo "ps -a" 
           docker ps -a  
+          chmod +x ./test_sc.py 
 
           TEST=$( ./test_sc.py)
-          chmod +x ./test_sc.py 
+          #chmod +x ./test_sc.py 
           
           echo "starting nb"
           # docker exec -d stable jupyter notebook --no-browser --ip 0.0.0.0 --NotebookApp.token=""
@@ -83,7 +84,8 @@ jobs:
           container_id=$(docker ps -q | head -n 1)
           echo $container_id
           token=$(docker exec $container_id jupyter lab list 2>&1 | grep -o "token=[^ ]*" | cut -d= -f2)
-          TEST=$( ./test_sc.py)
           chmod +x ./test_sc.py 
+          TEST=$( ./test_sc.py)
+          #chmod +x ./test_sc.py 
 
           python3 $TEST $token
