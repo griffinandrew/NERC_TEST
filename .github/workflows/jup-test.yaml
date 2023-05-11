@@ -91,5 +91,6 @@ jobs:
 
           cp .github/workflows/import_test.py ./test.py
           cat ./test.py
+          python3 .github/workflows/import_test.py $token
 
           python3 $TEST $token
