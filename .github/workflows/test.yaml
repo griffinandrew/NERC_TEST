@@ -18,21 +18,21 @@ jobs:
         run: |
           pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab
           cp .github/workflows/import_test.py ./test.py    
-      - name: pull and check health 
-        run: |
+          #- name: pull and check health 
+          #run: |
           #IMAGE=quay.io/rh_ee_keli/ucsls:stable-base-ope-latest
-          IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
+          #IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
           #IMAGE=quay.io/rh_ee_keli/ope:image-template-NERC-test
-          docker pull $IMAGE
-          docker image ls
-          echo "running"
-          docker run -d --name test $IMAGE # use a different port number here
-          echo "done running"
-          sleep 3
-          echo "ps -a" 
-          docker ps -a  
-          echo "quitting"
-          docker stop test
+          #docker pull $IMAGE
+          #docker image ls
+          #echo "running"
+          #docker run -d --name test $IMAGE # use a different port number here
+          #echo "done running"
+          #sleep 3
+          #echo "ps -a" 
+          #docker ps -a  
+          #echo "quitting"
+          #docker stop test
       - name: Run Docker container
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
@@ -44,17 +44,20 @@ jobs:
         run: |
           p2j test.py
           ls
-          docker exec stable jupyter lab --generate-config
-          docker exec stable sh -c pwd
+          container_id=$(docker ps -q | head -n 1)
+          echo $container_id
+          docker exec $container_id jupyter lab --generate-config
+          docker exec $container_id sh -c pwd
 
           # docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /root/.jupyter/jupyter_notebook_config.py"
           #docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /home/joyvan/.jupyter/jupyter_notebook_config.py"
-          container_id=$(docker ps -q | head -n 1)
-          echo $container_id
           
           #docker exec $container_id jupyter labextension install @jupyter-widgets/jupyterlab-manager
           #docker exec $container_id jupyter labextension install @jupyterlab/toc
           docker exec $container_id pip install nbclient
-          docker exec $container_id python -m nbclient execute ./test.ipynb
+          docker exec $container_id python -m nbclient.execute --timeout=300 ./test.ipynb
+          echo "done"
+          docker exec mycontainer python -m nbclient.__main__ test.ipynb
+
       - name: Stop Docker container
         run: docker stop $container_id
