@@ -16,10 +16,14 @@ jobs:
           python-version: "3.9"
       - name: Install dependencies #requirements docs unable to read, hard installing dependencies 
         run: |
-          pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab
+          #pip install -r requirements.txt    
+          pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j
+          #cp .github/workflows/import_test.ipynb ./test.ipynb
           cp .github/workflows/import_test.py ./test_sc.py    
-
-      - name: pull and check health 
+          #cp .github/workflows/stop.sh ./stop.sh
+          #cp .github/workflows/import.ipynb ./import.ipynb
+          #cp .github/workflows/ip_jnb.ipynb ./ip_jnb.ipynb
+      - name: check health
         run: |
           #IMAGE=quay.io/rh_ee_keli/ucsls:stable-base-ope-latest
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
@@ -37,42 +41,52 @@ jobs:
 
       - name: run
         run: |
+          #IMAGE=quay.io/rh_ee_keli/ope:image-template-NERC-test
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
           echo "running"
-          docker run --name stable -p 8888:8888 $IMAGE    #--ip 0.0.0.0 --no-browser
+          docker run -d --name stable -p 8888:8888 $IMAGE #--ip 0.0.0.0 --no-browser
+          
+          #jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
           echo "done running"
+          #.github/workflows/test_script.sh #run the container and run the shell script, this might need to be a path within the github workflow file
           echo "sleep"
-          sleep 5
+          sleep 10
+          #LINK=file:///home/jovyan/.local/share/jupyter/runtime/jpserver-7-open.html
+          
           echo "ps -a" 
           docker ps -a  
           chmod +x ./test_sc.py 
+
           TEST=$( ./test_sc.py)
+          #chmod +x ./test_sc.py 
+          
           echo "starting nb"
-          docker exec stable jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --NotebookApp.token='' --port 8888 &
-          sleep 5
+          # docker exec -d stable jupyter notebook --no-browser --ip 0.0.0.0 --NotebookApp.token=""
+          docker exec -d stable jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --NotebookApp.token='' --port 8888
+          
+          sleep 10
           echo "done sleep, listing"
           docker ps -a
-          docker exec stable jupyter nbconvert --execute --output /dev/null test_sc.py --execute "--ExecutePreprocessor.timeout=-1"
+
+          docker exec -d stable jupyter nbconvert --execute --output /dev/null test_sc.py --execute "--ExecutePreprocessor.timeout=-1"
           echo "sleeping"
-          sleep 5
-          docker ps -a
+          sleep 30
+          docker ps -a 
+
           docker stop stable 
+
 
       - name: beta
         run: | 
+          #make pull-beta
           make pull-beta
+
           make run-beta &
-          sleep 5
+          sleep 3
           container_id=$(docker ps -q | head -n 1)
           echo $container_id
           token=$(docker exec $container_id jupyter lab list 2>&1 | grep -o "token=[^ ]*" | cut -d= -f2)
-          echo "token: $token"
           chmod +x ./test_sc.py 
           TEST=$( ./test_sc.py)
-          echo $TEST
 
-          cp .github/workflows/import_test.py ./test.py
-          cat ./test.py
-          python3 .github/workflows/import_test.py $token
-
-          #python3 $TEST $token
+          python3 $TEST $token
