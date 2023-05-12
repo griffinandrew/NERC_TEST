@@ -19,7 +19,7 @@ jobs:
       - name: Run Docker container
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
-          docker run -d -p 8888:8888 --name mycontainer -v /tests:home/jovyan/tests $IMAGE
+          docker run -d -p 8888:8888 --name mycontainer -v /tests:/tests $IMAGE
           echo "1"
           #docker run -d -p 8888:8888 --name mycontainer -v tests:/home/jovyan/ $IMAGE
       - name: Wait for container to start
