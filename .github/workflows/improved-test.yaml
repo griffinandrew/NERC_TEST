@@ -19,7 +19,7 @@ jobs:
       - name: Run Docker container
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
-          docker run -d -p 8888:8888 --name mycontainer -v /tests:/tests $IMAGE
+          docker run -d -p 8888:8888 --name mycontainer -v /tests:home/jovyan/tests $IMAGE
           echo "1"
           #docker run -d -p 8888:8888 --name mycontainer -v tests:/home/jovyan/ $IMAGE
       - name: Wait for container to start
@@ -43,7 +43,9 @@ jobs:
           #docker exec $container_id python -c "from nbclient import execute; execute.NotebookClient(timeout=300).run_notebook('./test.ipynb')"
           #docker exec $container_id python -m nbclient --timeout=300 ./test.ipynb
           #docker exec $container_id jupyter execute /workdir/import_test.ipynb --stdout
-          docker exec $container_id jupyter execute tests/test.ipynb --allow-errors
+          docker exec $container_id sh -c "pwd"
+          docker exec $container_id sh -c "cd home/jovyan/tests"
+          docker exec $container_id jupyter execute home/jovyan/tests/test.ipynb --allow-errors
 
           echo "done"
       - name: Stop Docker container
