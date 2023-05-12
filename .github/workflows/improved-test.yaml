@@ -43,7 +43,7 @@ jobs:
           #docker exec $container_id python -c "from nbclient import execute; execute.NotebookClient(timeout=300).run_notebook('./test.ipynb')"
           #docker exec $container_id python -m nbclient --timeout=300 ./test.ipynb
           #docker exec $container_id jupyter execute /workdir/import_test.ipynb --stdout
-          docker exec $container_id jupyter execute tests/test.ipynb --stdout
+          docker exec $container_id jupyter execute tests/test.ipynb
 
           echo "done"
       - name: Stop Docker container
