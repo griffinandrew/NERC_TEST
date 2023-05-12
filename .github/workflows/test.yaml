@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies #requirements docs unable to read, hard installing dependencies 
         run: |
           pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab
-          cp .github/workflows/import_test.py ./test_sc.py    
+          cp .github/workflows/import_test.py ./test.py    
       - name: pull and check health 
         run: |
           #IMAGE=quay.io/rh_ee_keli/ucsls:stable-base-ope-latest
@@ -28,7 +28,7 @@ jobs:
           echo "running"
           docker run -d --name test $IMAGE # use a different port number here
           echo "done running"
-          sleep 10
+          sleep 3
           echo "ps -a" 
           docker ps -a  
           echo "quitting"
@@ -42,7 +42,11 @@ jobs:
           until docker exec stable jupyter lab --version; do sleep 1; done
       - name: Execute Notebook
         run: |
-          docker exec stable jupyter nbconvert --to=python mynotebook.ipynb
-          docker exec stable python .github/workflows/import_test.py
+          p2j test.py
+          docker exec stable jupyter lab --generate-config
+          docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /root/.jupyter/jupyter_notebook_config.py"
+          docker exec stable jupyter labextension install @jupyter-widgets/jupyterlab-manager
+          docker exec stable jupyter labextension install @jupyterlab/toc
+          docker exec stable nbclient execute test.ipynb
       - name: Stop Docker container
         run: docker stop stable
