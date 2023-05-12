@@ -36,7 +36,8 @@ jobs:
           docker exec $container_id pip install nbclient
           echo "***********nbccilent installed, running notebook************"
           docker exec $container_id jupyter lab build --minimize=False
-          docker exec $container_id jupyter nbconvert --to notebook --execute ./test.ipynb --output executed.ipynb
+          #docker exec $container_id jupyter nbconvert --to notebook --execute ./test.ipynb --output executed.ipynb
+          docker exec $container_id nbclient ./test.ipynb --output output.ipynb
           #docker exec $container_id python -c "from nbclient import execute; execute.NotebookClient(timeout=300).run_notebook('./test.ipynb')"
           #docker exec $container_id python -m nbclient --timeout=300 ./test.ipynb
           echo "done"
