@@ -19,7 +19,7 @@ jobs:
       - name: Run Docker container
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
-          docker run -d -p 8888:8888 --name mycontainer $IMAGE
+          docker run -d -p 8888:8888 --name mycontainer -v .github/workflows/import_test.ipynb:/workdir $IMAGE
       - name: Wait for container to start
         run: |
           until docker exec mycontainer jupyter lab --version; do sleep 1; done
@@ -36,11 +36,11 @@ jobs:
           docker exec $container_id pip install nbclient
           echo "***********nbccilent installed, running notebook************"
           docker exec $container_id jupyter lab build --minimize=False
-          docker exec $container_id jupyter nbconvert --to notebook --execute .github/workflows/import_test.ipynb --output executed.ipynb
+          #docker exec $container_id jupyter nbconvert --to notebook --execute .github/workflows/import_test.ipynb --output executed.ipynb
           #docker exec $container_id nbclient .github/workflows/import_test.ipynb --output output.ipynb
           #docker exec $container_id python -c "from nbclient import execute; execute.NotebookClient(timeout=300).run_notebook('./test.ipynb')"
           #docker exec $container_id python -m nbclient --timeout=300 ./test.ipynb
-          #docker exec $container_id jupyter execute .github/workflows/import_test.ipynb --allow-errors
+          docker exec $container_id jupyter execute /workdir/import_test.ipynb --stdout
 
           echo "done"
       - name: Stop Docker container
