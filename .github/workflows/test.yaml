@@ -44,7 +44,7 @@ jobs:
         run: |
           p2j test.py
           docker exec stable jupyter lab --generate-config
-          docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /root/.jupyter/jupyter_notebook_config.py"
+          # docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /root/.jupyter/jupyter_notebook_config.py"
           docker exec stable jupyter labextension install @jupyter-widgets/jupyterlab-manager
           docker exec stable jupyter labextension install @jupyterlab/toc
           docker exec stable nbclient execute test.ipynb
