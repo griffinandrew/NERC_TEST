@@ -45,7 +45,7 @@ jobs:
           echo "pwd"
           docker exec $container_id sh -c "pwd"
           echo "grep"
-          docker exec $container_id sh -c "grep -r test.ipynb"
+          docker exec $container_id sh -c "ls"
           echo "runnning"
           docker exec $container_id jupyter execute home/jovyan/tests/test.ipynb --allow-errors
 
