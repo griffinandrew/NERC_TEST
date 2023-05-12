@@ -43,6 +43,7 @@ jobs:
       - name: Execute Notebook
         run: |
           p2j test.py
+          ls
           docker exec stable jupyter lab --generate-config
           docker exec stable sh -c pwd
 
@@ -54,6 +55,6 @@ jobs:
           #docker exec $container_id jupyter labextension install @jupyter-widgets/jupyterlab-manager
           #docker exec $container_id jupyter labextension install @jupyterlab/toc
           docker exec $container_id pip install nbclient
-          docker exec $container_id nbclient execute ./test.ipynb
+          docker exec $container_id python -m nbclient execute ./test.ipynb
       - name: Stop Docker container
-        run: docker stop $container_id 
+        run: docker stop $container_id

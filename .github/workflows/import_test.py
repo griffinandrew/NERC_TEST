@@ -65,6 +65,10 @@ try:
 except ImportError:
     raise ImportError("import array failed")
 
+try:
+    import array
+except ImportError:
+    raise ImportError("import array failed")
 
 if len(sys.argv) <= 1:
     print("Invalid number of arguments")
