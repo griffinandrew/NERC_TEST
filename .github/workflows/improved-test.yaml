@@ -40,7 +40,7 @@ jobs:
           #docker exec $container_id nbclient .github/workflows/import_test.ipynb --output output.ipynb
           #docker exec $container_id python -c "from nbclient import execute; execute.NotebookClient(timeout=300).run_notebook('./test.ipynb')"
           #docker exec $container_id python -m nbclient --timeout=300 ./test.ipynb
-          docker exec $container_id jupyter execute ./test.ipynb --allow-errors
+          docker exec $container_id jupyter execute .github/workflows/import_test.ipynb --allow-errors
 
           echo "done"
       - name: Stop Docker container
