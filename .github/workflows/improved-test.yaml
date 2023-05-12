@@ -15,11 +15,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab nbclient
-          cp .github/workflows/import_test.py ./test.py 
+          #cp .github/workflows/import_test.py ./test.py 
       - name: Run Docker container
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
-          docker run -d -p 8888:8888 --name mycontainer -v tests/import_test.ipynb:/home/jovyan $IMAGE
+          docker run -d -p 8888:8888 --name mycontainer -v tests/test.ipynb:/home/jovyan $IMAGE
       - name: Wait for container to start
         run: |
           until docker exec mycontainer jupyter lab --version; do sleep 1; done
@@ -41,7 +41,7 @@ jobs:
           #docker exec $container_id python -c "from nbclient import execute; execute.NotebookClient(timeout=300).run_notebook('./test.ipynb')"
           #docker exec $container_id python -m nbclient --timeout=300 ./test.ipynb
           #docker exec $container_id jupyter execute /workdir/import_test.ipynb --stdout
-          docker exec $container_id jupyter execute home/jovyan/import_test.ipynb --stdout
+          docker exec $container_id jupyter execute home/jovyan/test.ipynb --stdout
 
           echo "done"
       - name: Stop Docker container
