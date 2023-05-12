@@ -1,0 +1,38 @@
+name: improved-test
+on:
+  push:
+    branches: 
+      - 'image*'
+jobs:
+  new-test:
+    runs-on: ubuntu-latest # use the latest ubuntu container image 
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2 # use action to install python
+        with:
+          python-version: "3.9"
+      - name: Install dependencies
+        run: |
+          pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab nbclient
+      - name: Run Docker container
+        run: |
+          IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
+          docker run -d -p 8888:8888 --name mycontainer $IMAGE
+      - name: Wait for container to start
+        run: |
+          until docker exec mycontainer jupyter lab --version; do sleep 1; done
+      - name: Execute Notebook
+        run: |
+          p2j test.py
+          ls
+          container_id=$(docker ps -qf "name=mycontainer" | head -n 1)
+          echo $container_id
+          docker exec $container_id jupyter lab --generate-config
+          docker exec $container_id sh -c "echo 'c.NotebookApp.token = \"\"' >> /home/$NB_USER/.jupyter/jupyter_notebook_config.py"
+          docker exec $container_id jupyter labextension install @jupyter-widgets/jupyterlab-manager
+          docker exec $container_id jupyter labextension install @jupyterlab/toc
+          docker exec $container_id python -m nbclient.execute --timeout=300 ./test.ipynb
+          echo "done"
+      - name: Stop Docker container
+        run: docker stop mycontainer
