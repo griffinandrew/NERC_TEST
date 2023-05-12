@@ -47,7 +47,7 @@ jobs:
           docker exec stable sh -c pwd
 
           # docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /root/.jupyter/jupyter_notebook_config.py"
-          docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /home/joyvan/.jupyter/jupyter_notebook_config.py"
+          #docker exec stable sh -c "echo 'c.NotebookApp.token = \"\"' >> /home/joyvan/.jupyter/jupyter_notebook_config.py"
           container_id=$(docker ps -q | head -n 1)
           echo $container_id
           
