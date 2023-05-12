@@ -44,10 +44,12 @@ jobs:
           #docker exec $container_id jupyter execute /workdir/import_test.ipynb --stdout
           echo "pwd"
           docker exec $container_id sh -c "pwd"
-          echo "grep"
+          echo "ls"
           docker exec $container_id sh -c "ls"
+          echo "cd"
+          docker exec $container_id sh -c "cd /tests"
           echo "runnning"
-          docker exec $container_id jupyter execute home/jovyan/tests/test.ipynb --allow-errors
+          docker exec $container_id jupyter execute tests/test.ipynb --allow-errors
 
           echo "done"
       - name: Stop Docker container
