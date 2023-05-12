@@ -53,6 +53,7 @@ jobs:
           
           #docker exec $container_id jupyter labextension install @jupyter-widgets/jupyterlab-manager
           #docker exec $container_id jupyter labextension install @jupyterlab/toc
+          docker exec $container_id pip install nbclient
           docker exec $container_id nbclient execute ./test.ipynb
       - name: Stop Docker container
         run: docker stop $container_id 
