@@ -15,12 +15,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab nbclient
-          cp tests/test.ipynb ./test.ipynb
+          cp tests/test.ipynb test.ipynb
           chmod +x test.ipynb
+          ls
       - name: Run Docker container
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
-          docker run -d -p 8888:8888 --name mycontainer -v /test.ipynb:/home/jovyan/work $IMAGE #&& until docker exec mycontainer jupyter lab --version; do sleep 1; done
+          docker run -d -p 8888:8888 --name mycontainer -v test.ipynb:/home/jovyan/work $IMAGE #&& until docker exec mycontainer jupyter lab --version; do sleep 1; done
           docker exec mycontainer sh -c "pwd"
           #docker run -d -p 8888:8888 --name mycontainer -v /tests:/home/jovyan/ $IMAGE
           #docker run -d -p 8888:8888 --name mycontainer -v /tests:/home/jovyan -e JUPYTER_ENABLE_LAB=yes --memory 4g $IMAGE
