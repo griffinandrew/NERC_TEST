@@ -64,6 +64,7 @@ jobs:
           #docker exec $container_id sh -c "pwd"
           echo "runnning"
           docker exec $container_id jupyter execute /home/jovyan/work/test.ipynb
+          echo "running 2"
           docker exec $container_id jupyter nbconvert --to notebook --execute /home/jovyan/work/test.ipynb --output /home/jovyan/work/output.ipynb
           echo "done"
       - name: Stop Docker container
