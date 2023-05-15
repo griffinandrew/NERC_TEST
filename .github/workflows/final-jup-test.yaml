@@ -1,10 +1,10 @@
-name: improved-test
+name: final-test
 on:
   push:
     branches: 
       - 'image*'
 jobs:
-  new-test:
+  final-test:
     runs-on: ubuntu-latest # use the latest ubuntu container image 
     steps:
       - uses: actions/checkout@v2
