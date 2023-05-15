@@ -52,14 +52,14 @@ jobs:
           docker exec $container_id sh -c "pwd"
           echo "ls"
           docker exec $container_id sh -c "ls"
-          echo "cd"
-          #docker exec $container_id sh -c "cd /work"
+          echo "ls work"
+          docker exec mycontainer sh -c "ls /home/jovyan/work"
           #echo "list in work"
           #docker exec $container_id sh -c "ls"
           #echo "pwd2"
           #docker exec $container_id sh -c "pwd"
           echo "runnning"
-          docker exec $container_id jupyter execute /tests/test.ipynb --allow-errors
+          docker exec $container_id jupyter execute home/jovyan/work/test.ipynb --allow-errors
           echo "done"
       - name: Stop Docker container
         run: docker stop mycontainer
