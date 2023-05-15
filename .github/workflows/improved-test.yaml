@@ -25,6 +25,7 @@ jobs:
           container_id=$(docker ps -qf "name=mycontainer" | head -n 1)
           docker exec mycontainer sh -c "pwd"
           docker cp tests/test.ipynb $container_id:/home/jovyan/work
+          docker cp tests/output.ipynb $container_id:/home/jovyan/work
           #docker run -d -p 8888:8888 --name mycontainer -v /tests:/home/jovyan/ $IMAGE
           #docker run -d -p 8888:8888 --name mycontainer -v /tests:/home/jovyan -e JUPYTER_ENABLE_LAB=yes --memory 4g $IMAGE
           docker ps -a
