@@ -20,7 +20,8 @@ jobs:
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
           #docker run -d -p 8888:8888 --name mycontainer -v /tests:/tests $IMAGE
-          docker run -d -p 8888:8888 --name mycontainer -v /tests:/home/jovyan/ $IMAGE
+          #docker run -d -p 8888:8888 --name mycontainer -v /tests:/home/jovyan/ $IMAGE
+          docker run -d -p 8888:8888 --name mycontainer -v /tests:/home/jovyan -e JUPYTER_ENABLE_LAB=yes --memory 4g $IMAGE
       - name: Wait for container to start
         run: |
           until docker exec mycontainer jupyter lab --version; do sleep 1; done
