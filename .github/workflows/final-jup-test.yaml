@@ -15,9 +15,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyter-book matplotlib numpy pandas ipywidgets notebook nbconvert p2j jupyterlab nbclient
-          cp tests/test.ipynb test.ipynb
-          chmod +x test.ipynb
-          ls -l
       - name: Run Docker container
         run: |
           IMAGE=quay.io/rh_ee_keli/ope:beta-image-template-NERC-test
