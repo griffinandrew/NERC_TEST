@@ -33,9 +33,9 @@ jobs:
           echo "jup lab"
           docker exec $container_id jupyter lab --generate-config
           echo "token"
-	        docker exec $container_id sh -c "echo 'c.NotebookApp.token = \"\"' >> /home/jovyan/.jupyter/jupyter_notebook_config.py"
+          docker exec $container_id sh -c "echo 'c.NotebookApp.token = \"\"' >> /home/jovyan/.jupyter/jupyter_notebook_config.py"
           echo "install"
-	        docker exec $container_id jupyter labextension install @jupyter-widgets/jupyterlab-manager
+          docker exec $container_id jupyter labextension install @jupyter-widgets/jupyterlab-manager
           docker exec $container_id jupyter labextension install @jupyterlab/toc
           docker exec $container_id pip install nbclient
           echo "***********nbccilent installed, running notebook************"
