@@ -59,7 +59,7 @@ jobs:
           #echo "pwd2"
           #docker exec $container_id sh -c "pwd"
           echo "runnning"
-          docker exec $container_id jupyter execute home/jovyan/work/test.ipynb --allow-errors
+          docker exec $container_id jupyter execute /home/jovyan/work/test.ipynb --allow-errors
           echo "done"
       - name: Stop Docker container
         run: docker stop mycontainer
